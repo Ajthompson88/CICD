@@ -1,0 +1,41 @@
+# .github/workflows/test-e2e.yml
+name: CI · Cypress E2E
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  e2e:
+    name: E2E Tests (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['18.x', '20.x', '22.x']
+
+    steps:
+      - name: 📂 Checkout code
+        uses: actions/checkout@v3
+
+      - name: 🛠 Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🔨 Build for E2E
+        run: npm run render-build
+
+      - name: 🚀 Start server in background
+        run: |
+          npm run start &
+          # give it a moment to boot
+          npx wait-on http://localhost:3000 --timeout 60
+
+      - name: 🧪 Run Cypress tests
+        run: npx cypress run

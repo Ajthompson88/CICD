@@ -1,0 +1,19 @@
+name: CD · Deploy to Render
+
+# runs on direct pushes (or merges) into main,
+# and also allows manual dispatch if you ever need it
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  render-deploy:
+    name: Trigger Render Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger deploy via Render Webhook
+        run: |
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"

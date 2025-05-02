@@ -1,0 +1,36 @@
+# .github/workflows/main.workflow.yml
+name: CI & CD
+
+on:
+  pull_request:
+    branches: [ develop ]
+  push:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  cypress-e2e:
+    name: E2E Tests (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ '18.x', '20.x', '22.x' ]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm run render-build
+      - run: |
+          npm run start &
+          npx wait-on http://localhost:3000 --timeout 60
+      - run: npx cypress run
+
+  render-deploy:
+    name: Trigger Render Deploy
+    needs: cypress-e2e
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && contains(github.ref, 'refs/heads/')
+    steps:
+      - run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"

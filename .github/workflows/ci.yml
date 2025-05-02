@@ -1,0 +1,34 @@
+name: CI · Cypress Component Tests
+
+# only run when PRs target develop
+on:
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  cypress-component:
+    name: Cypress Component Tests (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['18.x', '20.x', '22.x']
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      # if you have a build step necessary for your components, uncomment:
+      # - name: Build
+      #   run: npm run build
+
+      - name: Run Cypress component tests
+        run: npx cypress run --component
