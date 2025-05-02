@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 dotenv.config();
 
 // Retrieve the full MongoDB connection string from env var
-const uri = process.env.MONGO_DB || process.env.MONGO_DB_URI;
+const uri = process.env.MONGO_DB || "mongodb://localhost:27017/techquiz";
 if (!uri) {
   throw new Error('❌ MONGO_DB environment variable is not defined');
 }
