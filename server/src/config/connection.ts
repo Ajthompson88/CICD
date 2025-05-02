@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+<<<<<<< HEAD
 const uri = process.env.MONGO_DB;
 if (!uri) throw new Error('MONGO_DB environment variable is not defined');
 mongoose.connect(uri, { /* options */ })
@@ -12,6 +13,8 @@ mongoose.connect(uri, { /* options */ })
     process.exit(1);
   });
 
+=======
+>>>>>>> bed261a49304477016cb02e80bd08749c2312a6b
 const connectionString = process.env.MONGO_DB || 'mongodb://localhost:27017/techquiz';
 
 if (!connectionString) {
