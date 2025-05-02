@@ -1,0 +1,15 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    /* Modules */
+    "rootDir": "src" /* Your source files */,
+    "module": "esnext" /* Change this to 'esnext', 'node18', or 'nodenext' */,
+    "target": "es2020",
+    "resolveJsonModule": true,
+
+    /* Emit */
+    "outDir": "dist" /* Compiled output files */,
+    "strict": true
+  },
+  "include": ["src"]
+}
