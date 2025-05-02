@@ -1,23 +1,19 @@
-import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import mongoose from 'mongoose';
 dotenv.config();
-const uri = process.env.MONGO_DB;
-if (!uri)
-    throw new Error('MONGO_DB environment variable is not defined');
-mongoose.connect(uri, { /* options */})
-    .then(() => console.log('✅ Connected to MongoDB'))
-    .catch(err => {
-    console.error('connection error:', err);
+const uri = process.env.MONGO_DB_URI || 'mongodb://localhost:27017/techquiz';
+const options = {
+    maxPoolSize: 10,
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 45000,
+    family: 4,
+};
+mongoose.connect(uri, options)
+    .then(() => {
+    console.log(`✅ Connected to MongoDB at ${uri}`);
+})
+    .catch((err) => {
+    console.error(`❌ Mongo connection error to ${uri}:`, err);
     process.exit(1);
 });
-const connectionString = process.env.MONGO_DB || 'mongodb://localhost:27017/techquiz';
-if (!connectionString) {
-    throw new Error('MONGO_DB environment variable is not defined');
-}
-mongoose.connect(connectionString);
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', () => {
-    console.log('Connected to MongoDB Atlas');
-});
-export default db;
+export default mongoose.connection;
