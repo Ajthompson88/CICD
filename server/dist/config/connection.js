@@ -1,5 +1,14 @@
+import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 dotenv.config();
-import mongoose from 'mongoose';
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/techquiz');
-export default mongoose.connection;
+const connectionString = process.env.MONGO_DB || '';
+if (!connectionString) {
+    throw new Error('MONGO_DB environment variable is not defined');
+}
+mongoose.connect(connectionString);
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', () => {
+    console.log('Connected to MongoDB Atlas');
+});
+export default db;
