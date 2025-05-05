@@ -4,7 +4,7 @@ name: CI · Cypress Component Tests
 on:
   pull_request:
     branches:
-      - develop
+      - main
 
 jobs:
   cypress-component:
@@ -27,8 +27,8 @@ jobs:
         run: npm ci
 
       # if you have a build step necessary for your components, uncomment:
-      # - name: Build
-      #   run: npm run build
+      - name: Build
+        run: npm run build
 
       - name: Run Cypress component tests
         run: npx cypress run --component
