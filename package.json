@@ -10,7 +10,8 @@
     "build": "npm run build-server && npm run build-client",
     "build-server": "cd server && npm run build",
     "build-client": "cd client && npm run build",
-    "render-build": "npm install --include=dev && npm run build",
+    "deploy-build": "npm install --include=dev && npm run build",
+    "render-build": "npm run build --prefix client",
     "test": "npx cypress run --browser electron",
     "test-component": "npx cypress run --component",
     "gui": "npx cypress open"

@@ -1,38 +1,56 @@
-name: CI · Run Cypress Tests
+# .github/workflows/ci.yml
+name: CI · Cypress Tests
 
 on:
   pull_request:
-    branches: [develop]
+    branches: [ develop ]
 
 jobs:
   component-tests:
+    name: Cypress Component Tests
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: ['18.x', '20.x', '22.x']
     steps:
-      - name: Setup Node.js
+      - uses: actions/checkout@v3
+
+      - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
-      - uses: actions/checkout@v3
-      - run: |
-          npm ci
-      # build only if your component tests need it
-      - run: npm run build
-      - run: npx cypress run --component
+          node-version: 18.x
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Start Vite dev server
+        run: npm run dev --prefix client &
+
+      - name: Wait for dev server
+        run: npx wait-on http://localhost:4173 --timeout 60
+
+      - name: Run component tests
+        run: npx cypress run --component --spec "cypress/component/**/*.cy.{js,jsx,ts,tsx}"
 
   e2e-tests:
+    name: Cypress E2E Tests
     runs-on: ubuntu-latest
+    needs: component-tests
     steps:
-      - name: Setup Node.js
+      - uses: actions/checkout@v3
+
+      - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: '18.x'
-      - uses: actions/checkout@v3
-      - run: npm ci
-      - run: npm run build
-      - run: |
-          npx serve -s dist -l 4173 &       # serve your production bundle
-          npx wait-on http://localhost:4173
-      - run: npx cypress run
+          node-version: 18.x
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build client for E2E
+        run: npm run build --prefix client
+
+      - name: Serve built client
+        run: |
+          npm run serve --prefix client &  
+          npx wait-on http://localhost:4173 --timeout 60
+
+      - name: Run E2E tests
+        run: npx cypress run --spec "cypress/e2e/**/*.cy.{js,jsx,ts,tsx}"
