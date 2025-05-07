@@ -1,15 +1,22 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "jsx": "react-jsx", // Use "react" for older React versions
+    "jsx": "react-jsx",
     "target": "es2020",
     "module": "esnext",
     "strict": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "rootDir": "src",
+    "rootDir": ".",
     "outDir": "dist"
   },
-  "include": ["../src/**/*.js", "../src/**/*.jsx", "../src/**/*.ts", "../src/**/*.tsx"],
-  "exclude": ["dist"],
+  "include": [
+    "./**/*.ts",
+    "./**/*.tsx",
+    "../src/**/*.js",
+    "../src/**/*.jsx",
+    "../src/**/*.ts",
+    "../src/**/*.tsx"
+  ],
+  "exclude": ["dist"]
 }
