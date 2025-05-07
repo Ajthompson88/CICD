@@ -13,14 +13,8 @@ jobs:
     name: E2E Tests (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
 
-    services:
-      mongo:
-        image: mongo:6.0
-        ports:
-          - 27017:27017
-
     env:
-      MONGO_DB: ${{ secrets.MONGO_DB }}
+      MONGO_DB_URI: ${{ secrets.MONGO_DB_URI }}
       PORT: 3001
 
     strategy:
@@ -44,8 +38,9 @@ jobs:
 
       - name: 🚀 Start server in background
         run: |
-          npm run start &
-          npx wait-on http://localhost:3001 --timeout 60
+          npm run build --prefix client
+          npm run serve --prefix client &      # serve on 4173
+          npx wait-on http://localhost:4173 --timeout 60
 
       - name: 🧪 Run Cypress tests
         run: npx cypress run

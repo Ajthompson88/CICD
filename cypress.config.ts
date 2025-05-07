@@ -11,11 +11,11 @@ export default defineConfig({
   },
 
   e2e: {
-    baseUrl: 'http://localhost:4173',  // ← changed from 5173
+    baseUrl: 'http://localhost:3001',  // ← changed from 5173
     specPattern: 'cypress/e2e/**/*.cy.{js,jsx,ts,tsx}',
-    setupNodeEvents(config) {
-      // Add any event listeners or modify the config here if needed
-      return config;
+      setupNodeEvents(on, config) {
+         return config;            
+    
     },
   },
 });
